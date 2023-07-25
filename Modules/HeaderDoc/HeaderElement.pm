@@ -510,7 +510,7 @@ sub attribute {
 	$attribute =~ s/\s*$//so;
     }
 
-    %attlist->{$name}=$attribute;
+    $attlist{$name}=$attribute;
 
     if ($long) {
         $self->{LONGATTRIBUTES} = \%attlist;
@@ -544,7 +544,7 @@ sub getAttributes
         }
 
         foreach my $key (sort keys %attlist) {
-	    my $value = %attlist->{$key};
+	    my $value = $attlist{$key};
 	    my $newatt = $value;
 	    if ($key eq "Superclass" && !$xml) {
 		$newatt = $self->genRef("class", $value, $value); # @@@
@@ -565,7 +565,7 @@ sub getAttributes
         }
 
         foreach my $key (sort keys %attlist) {
-	    my $value = %attlist->{$key};
+	    my $value = $attlist{$key};
 	    if ($xml) {
 		$retval .= "<longattribute><name>$key</name><value>$value</value></longattribute>\n";
 	    } else {
@@ -645,7 +645,7 @@ sub getAttributeLists
 	    $retval .= "<b>$key:</b><dl>\n";
 	}
 	print "key $key\n" if ($localDebug);
-	my @list = @{%attlists->{$key}};
+	my @list = @{$attlists{$key}};
 	foreach my $item (@list) {
 	    print "item: $item\n" if ($localDebug);
 	    my ($name, $disc) = &getAPINameAndDisc($item);
@@ -697,13 +697,13 @@ sub attributelist {
     }
 
     my @list = ();
-    my $listref = %attlists->{$name};
+    my $listref = $attlists{$name};
     if ($listref) {
 	@list = @{$listref};
     }
     push(@list, $attribute);
 
-    %attlists->{$name}=\@list;
+    $attlists{$name}=\@list;
     $self->{ATTRIBUTELISTS} = \%attlists;
     # print "AL = $self->{ATTRIBUTELISTS}\n";
 
@@ -2030,7 +2030,7 @@ sub setStyle
     $style =~ s/\s*$//sgo;
 
     if (length($style)) {
-	%CSS_STYLES->{$name} = $style;
+	$CSS_STYLES{$name} = $style;
 	$HeaderDoc::use_styles = 1;
     }
 }
@@ -2174,7 +2174,7 @@ sub getStyle
     my $self = shift;
     my $name = shift;
 
-   return %CSS_STYLES->{$name};
+   return $CSS_STYLES{$name};
 }
 
 sub styleSheet
@@ -2201,7 +2201,7 @@ sub styleSheet
 	if (!$TOC) { $stdstyles = 0; }
     }
     foreach my $stylename (sort keys %CSS_STYLES) {
-	my $styletext = %CSS_STYLES->{$stylename};
+	my $styletext = $CSS_STYLES{$stylename};
 	$css .= ".$stylename {$styletext}";
     }
 
